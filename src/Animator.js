@@ -40,6 +40,14 @@ export default class Animator extends Component{
     )
   }
 
+  _toggle() {
+    if (this.props.currentPosition === this.props.upPosition) {
+      this._transitionTo(this.props.downPosition, this.props.onCollapsed);
+    } else if (this.props.currentPosition === this.props.downPosition) {
+      this._transitionTo(this.props.upPosition, this.props.onExpanded);
+    }
+  }
+
   _handlePanResponderMove = (e, gesture) => {
     if (this._swipeInBounds(gesture)) {
       this.position.setValue({ y: this.props.currentPosition.y + gesture.dy });
