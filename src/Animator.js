@@ -17,7 +17,7 @@ export default class Animator extends Component{
 
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: this._handlePanResponderMove,
+      //onPanResponderMove: this._handlePanResponderMove,
       onPanResponderRelease: this._handlePanResponderRelease
     });
   }
@@ -77,6 +77,7 @@ export default class Animator extends Component{
 
   _transitionTo(position, callback) {
     Animated.spring(this.position, {
+      useNativeDriver: true,
       toValue: position
     }).start(() => this.props.onExpanded());
     
@@ -86,6 +87,7 @@ export default class Animator extends Component{
 
   _resetPosition() {
     Animated.spring(this.position, {
+      useNativeDriver: true,
       toValue: this.props.currentPosition
     }).start();
   }
