@@ -3,7 +3,8 @@ import {
   PanResponder,
   Animated,
   Dimensions,
-  StyleSheet
+  StyleSheet,
+  Keyboard
 } from 'react-native';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -20,6 +21,25 @@ export default class Animator extends Component{
       //onPanResponderMove: this._handlePanResponderMove,
       onPanResponderRelease: this._handlePanResponderRelease
     });
+    this.keyboardDidShow= this.keyboardDidShow.bind(this);
+    this.keyboardDidHide= this.keyboardDidHide.bind(this);
+
+    Keyboard.addListener("keyboardWillShow", this.keyboardDidShow);
+    Keyboard.addListener("keyboardWillHide", this.keyboardDidHide);
+  }
+
+  keyboardDidShow() {
+    this._transitionTo({
+      x: 0, 
+      y: this.props.upPosition.y - 220
+    }, ()=>null);
+  }
+
+  keyboardDidHide() {
+    this._transitionTo({
+      x: 0, 
+      y: this.props.upPosition.y
+    }, ()=>null);
   }
 
   render() {
@@ -40,11 +60,11 @@ export default class Animator extends Component{
     )
   }
 
-  _toggle() {
-    if (this.props.currentPosition === this.props.upPosition) {
-      this._transitionTo(this.props.downPosition, this.props.onCollapsed);
-    } else if (this.props.currentPosition === this.props.downPosition) {
+  _toggle(isOpen) {
+    if (!isOpen) {
       this._transitionTo(this.props.upPosition, this.props.onExpanded);
+    } else {
+      this._transitionTo(this.props.downPosition, this.props.onCollapsed);
     }
   }
 
@@ -77,7 +97,7 @@ export default class Animator extends Component{
 
   _transitionTo(position, callback) {
     Animated.spring(this.position, {
-      useNativeDriver: true,
+      useNativeDriver: false,
       toValue: position
     }).start(() => this.props.onExpanded());
     
@@ -87,7 +107,7 @@ export default class Animator extends Component{
 
   _resetPosition() {
     Animated.spring(this.position, {
-      useNativeDriver: true,
+      useNativeDriver: false,
       toValue: this.props.currentPosition
     }).start();
   }

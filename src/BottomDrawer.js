@@ -107,14 +107,13 @@ export default class BottomDrawer extends Component{
         onCollapsed = {() => this.props.onCollapsed()}
       >
         {this.props.children}
-
         <View style={{height: Math.sqrt(SCREEN_HEIGHT), backgroundColor: this.props.backgroundColor}} />
       </Animator>
     )
   }
 
   toggle() {
-    this.animator._toggle();
+     this.animator._toggle(this.props.isOpen);
   }
 
   setCurrentPosition(position) {
